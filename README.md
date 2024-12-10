@@ -3,6 +3,7 @@
 ```
 $ python write.py a.raw
 $ python read.py a.raw
+n_genes =  8
 ['Backward_X', 'Forward_X', 'Backward_Y', 'Forward_Y', 'Plus', 'Minus']
 (1, 1, 1, 1, 2, 2)
 (0, 0, 0, 0, 0, 0)

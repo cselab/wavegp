@@ -19,13 +19,14 @@ def init():
         gen[g.i + g.n + j, 1] = randrange(g.i + g.n)
     return gen
 
+
 def build(gen, *args):
     cnt = 0
-    verts = {arg for arg in args if isinstance(arg, str) }
-    edgs = {arg for arg in args if not isinstance(arg, str) }
+    verts = {arg for arg in args if isinstance(arg, str)}
+    edgs = {arg for arg in args if not isinstance(arg, str)}
 
     cnt = 0
-    D = { }
+    D = {}
     for i, v in enumerate(verts):
         if re.match("^o[0-9]+$", v):
             ty = "o"
@@ -44,8 +45,11 @@ def build(gen, *args):
     for x, y in edgs:
         ty0, j0 = D[x]
         ty1, j1 = D[y]
+
+
 #        if ty1 == "n":
-#            gen[g.i + j1] = 
+#            gen[g.i + j1] =
+
 
 class g:
     pass
@@ -53,7 +57,7 @@ class g:
 
 random.seed(2)
 g.names = "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus", "Minus"
-Names = { name : index for index, name in enumerate(g.names) }
+Names = {name: index for index, name in enumerate(g.names)}
 g.arity = 1, 1, 1, 1, 2, 2
 g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
@@ -67,7 +71,6 @@ gen = init()
 genes = [gen]
 
 build(gen, "i0", "Backward_Y", (0, 1), "Minus", (0, 2), (1, 2), "o0", (2, 3))
-
 
 fmt = "iiiiiSIIy"
 buf = wavegp.serial(fmt, g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args,

@@ -1,4 +1,4 @@
-import serial
+import wavegp
 import sys
 
 
@@ -42,10 +42,10 @@ def graph(gen, path):
 fmt = "iiiiiSIIy"
 with open(sys.argv[1], "rb") as f:
     buf = f.read()
-    g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args, genes = serial.deserial(
+    g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args, genes = wavegp.dewavegp(
         fmt, buf)
 
 for i, gen in enumerate(genes):
-    path = "q.%08d.gv" % i
+    path = "%s.%08d.gv" % (sys.argv[2], i)
     graph(gen, path)
-    sys.stderr.write("graphvis.py: %s\n" % path)
+    sys.stderr.write("graphviz.py: %s\n" % path)

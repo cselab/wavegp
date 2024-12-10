@@ -10,7 +10,7 @@ dtype = np.dtype("uint8")
 max_val = 256
 
 
-def serial(fmt, *args):
+def wavegp(fmt, *args):
     assert len(fmt) == len(args)
     buf = bytearray()
     for f, a in zip(fmt, args):
@@ -37,7 +37,7 @@ def serial(fmt, *args):
     return buf
 
 
-def deserial(fmt, buf):
+def dewavegp(fmt, buf):
     offset = 0
     ans = []
     for f in fmt:

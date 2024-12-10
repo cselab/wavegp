@@ -1,7 +1,7 @@
 from random import randrange
 import numpy as np
 import random
-import serial
+import wavegp
 import sys
 
 
@@ -12,7 +12,7 @@ def init():
         for k in range(g.a):
             gen[g.i + j, 1 + k] = randrange(g.i + j)
         for k in range(g.p):
-            gen[g.i + j, 1 + g.a + k] = randrange(serial.max_val)
+            gen[g.i + j, 1 + g.a + k] = randrange(wavegp.max_val)
     for j in range(g.o):
         gen[g.i + g.n + j, 1] = randrange(g.i + g.n)
     return gen
@@ -35,7 +35,7 @@ g.p = 1
 g.lmb = 10
 genes = [init() for i in range(g.lmb)]
 fmt = "iiiiiSIIy"
-buf = serial.serial(fmt, g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args,
+buf = wavegp.wavegp(fmt, g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args,
                     genes)
 with open(sys.argv[1], "wb") as f:
     f.write(buf)

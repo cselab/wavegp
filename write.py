@@ -26,7 +26,7 @@ random.seed(2)
 g.names = "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus", "Minus"
 g.arity = 1, 1, 1, 1, 2, 2
 g.args = 0, 0, 0, 0, 0, 0
-# input, maximum node, otuput, arity, parameters
+# input, maximum node, output, arity, parameters
 g.i = 1
 g.n = 10
 g.o = 1

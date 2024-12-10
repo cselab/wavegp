@@ -13,7 +13,7 @@ def stopo(gen):
         n = q.pop()
         if n >= g.i:
             topo.add(n)
-            arity = g.nodes[gen[n, 0]].arity
+            arity = g.arity[gen[n, 0]]
             adj = gen[n, 1:1 + arity]
             q.update(adj)
     return sorted(topo)
@@ -25,9 +25,9 @@ def graph(gen, path):
         for j in range(g.i):
             f.write(f"  {j} [label = i{j}]\n")
         for n in stopo(gen):
-            arity = 1  # g.nodes[gen[n, 0]].arity
-            args = 1  # g.nodes[gen[n, 0]].args
-            f.write(f'  {n} [label = "{names[gen[n, 0]]}')
+            arity = g.arity[gen[n, 0]]
+            args = g.args[gen[n, 0]]
+            f.write(f'  {n} [label = "{g.names[gen[n, 0]]}')
             for j in range(args):
                 f.write(f", {gen[n, 1 + g.a + j]}")
             f.write('"]\n')
@@ -39,10 +39,13 @@ def graph(gen, path):
         f.write("}\n")
 
 
-fmt = "iiiiiSy"
+fmt = "iiiiiSIIy"
 with open(sys.argv[1], "rb") as f:
     buf = f.read()
-    g.i, g.n, g.o, g.a, g.p, g.names, genes = serial.deserial(fmt, buf)
+    g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args, genes = serial.deserial(
+        fmt, buf)
 
 for i, gen in enumerate(genes):
-    graph(gen, "q.%08d.gv" % i)
+    path = "q.%08d.gv" % i
+    graph(gen, path)
+    sys.stderr.write("graphvis.py: %s\n" % path)

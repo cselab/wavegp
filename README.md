@@ -23,3 +23,12 @@ Convert to images
 ```
 $ for i in a.*.gv; do dot $i -T png -o ${i%.gv}.png; done
 ```
+
+Build
+
+```
+$ python build.py a.raw
+$ python graphviz.py a.raw a
+graphviz.py: a.00000000.gv
+graphviz.py: a.00000001.gv
+```

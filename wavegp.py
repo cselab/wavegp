@@ -1,4 +1,6 @@
+import collections
 import numpy as np
+import re
 import struct
 
 
@@ -8,6 +10,32 @@ class UnknownFormatString(Exception):
 
 dtype = np.dtype("uint8")
 max_val = 256
+
+
+def build(g, verts, edgs, params):
+    Names = {name: index for index, name in enumerate(g.names)}
+    gen = np.zeros((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
+    cnt = 0
+    D = {}
+    for i, v in enumerate(verts):
+        if re.match("^o[0-9]+$", v):
+            D[i] = g.i + g.n + int(v[1:])
+        elif re.match("^i[0-9]+$", v):
+            D[i] = int(v[1:])
+        else:
+            D[i] = g.i + cnt
+            gen[D[i], 0] = Names[v]
+            cnt += 1
+    A = collections.defaultdict(int)
+    for x, y in edgs:
+        j0 = D[x]
+        j1 = D[y]
+        gen[j1, 1 + A[y]] = j0
+        A[y] += 1
+    for i, param in enumerate(params):
+        for k, p in enumerate(param):
+            gen[D[i], 1 + g.a + k] = p
+    return gen
 
 
 def reachable_nodes(g, gen):

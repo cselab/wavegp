@@ -24,6 +24,8 @@ class g:
 
 random.seed(2)
 g.names = "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus"
+g.arity = 1, 1, 1, 1, 2
+g.args = 0, 0, 0, 0, 0
 # input, maximum node, otuput, arity, parameters
 g.i = 1
 g.n = 10
@@ -32,7 +34,8 @@ g.a = 2
 g.p = 1
 g.lmb = 10
 genes = [init() for i in range(g.lmb)]
-fmt = "iiiiiSy"
-buf = serial.serial(fmt, g.i, g.n, g.o, g.a, g.p, g.names, genes)
+fmt = "iiiiiSIIy"
+buf = serial.serial(fmt, g.i, g.n, g.o, g.a, g.p, g.names, g.arity, g.args,
+                    genes)
 with open(sys.argv[1], "wb") as f:
     f.write(buf)

@@ -21,6 +21,10 @@ def serial(fmt, *args):
             for s in a:
                 buf.extend(struct.pack("<i", len(s)))
                 buf.extend(s.encode("utf-8"))
+        elif f == "I":
+            buf.extend(struct.pack("<i", len(a)))
+            for s in a:
+                buf.extend(struct.pack("<i", s))
         elif f == "y":
             buf.extend(struct.pack("<i", len(a)))
             for s in a:
@@ -52,6 +56,12 @@ def deserial(fmt, buf):
                 offset += struct.calcsize("%ds" % size)
                 strings.append(value.decode("utf-8"))
             ans.append(strings)
+        elif f == "I":
+            size, = struct.unpack_from("<i", buf, offset)
+            offset += struct.calcsize("<i")
+            value = struct.unpack_from("<%di" % size, buf, offset)
+            offset += struct.calcsize("<%di" % size)
+            ans.append(value)
         elif f == "y":
             n_arrays, = struct.unpack_from("<i", buf, offset)
             offset += struct.calcsize("<i")

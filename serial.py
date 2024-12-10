@@ -7,6 +7,7 @@ class UnknownFormatString(Exception):
 
 
 dtype = np.dtype("uint8")
+max_val = 256
 
 
 def serial(fmt, *args):

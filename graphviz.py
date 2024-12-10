@@ -6,7 +6,7 @@ class g:
     pass
 
 
-Colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta", "black", "white", "gray"
+Colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
 
 
 def stopo(gen):

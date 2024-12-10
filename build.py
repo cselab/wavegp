@@ -42,7 +42,7 @@ g.n = 10
 g.o = 1
 g.a = 2
 g.p = 2
-gen = np.zeros((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
+gen = np.empty((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
 build(gen, ["i0", "Backward_Y", "Backward_X", "Minus", "o0"], [(0, 1), (0, 2),
                                                                (1, 3), (2, 3),
                                                                (3, 4)],

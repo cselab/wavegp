@@ -6,6 +6,9 @@ class g:
     pass
 
 
+Colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta", "black", "white", "gray"
+
+
 def stopo(gen):
     q = {x for x in gen[g.i + g.n:, 1]}
     topo = set()
@@ -32,7 +35,12 @@ def graph(gen, path):
                 f.write(f", {gen[n, 1 + g.a + j]}")
             f.write('"]\n')
             for j in range(arity):
-                f.write(f"  {gen[n, 1 + j]} -> {n}\n")
+                if arity == 1:
+                    f.write(f"  {gen[n, 1 + j]} -> {n}\n")
+                else:
+                    k = j % len(Colors)
+                    f.write(
+                        f"  {gen[n, 1 + j]} -> {n} [color = {Colors[j]}]\n")
         for j in range(g.o):
             f.write(f"  {g.i + g.n + j} [label = o{j}]\n")
             f.write(f"  {gen[g.i + g.n + j, 1]} -> {g.i + g.n + j}\n")

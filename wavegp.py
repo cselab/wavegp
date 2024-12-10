@@ -10,6 +10,19 @@ dtype = np.dtype("uint8")
 max_val = 256
 
 
+def reachable_nodes(g, gen):
+    q = {x for x in gen[g.i + g.n:, 1]}
+    ans = set()
+    while q:
+        n = q.pop()
+        if n >= g.i:
+            ans.add(n)
+            arity = g.arity[gen[n, 0]]
+            adj = gen[n, 1:1 + arity]
+            q.update(adj)
+    return sorted(ans)
+
+
 def serial(fmt, *args):
     assert len(fmt) == len(args)
     buf = bytearray()

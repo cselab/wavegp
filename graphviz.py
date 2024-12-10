@@ -9,25 +9,12 @@ class g:
 Colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
 
 
-def stopo(gen):
-    q = {x for x in gen[g.i + g.n:, 1]}
-    topo = set()
-    while q:
-        n = q.pop()
-        if n >= g.i:
-            topo.add(n)
-            arity = g.arity[gen[n, 0]]
-            adj = gen[n, 1:1 + arity]
-            q.update(adj)
-    return sorted(topo)
-
-
 def graph(gen, path):
     with open(path, "w") as f:
         f.write("digraph {\n")
         for j in range(g.i):
             f.write(f"  {j} [label = i{j}]\n")
-        for n in stopo(gen):
+        for n in wavegp.reachable_nodes(g, gen):
             arity = g.arity[gen[n, 0]]
             args = g.args[gen[n, 0]]
             f.write(f'  {n} [label = "{g.names[gen[n, 0]]}')

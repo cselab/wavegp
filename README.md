@@ -26,7 +26,7 @@ Convert to images
 $ for i in a.*.gv; do dot $i -T png -o ${i%.gv}.png; done
 ```
 
-<img src="img/a.svg" width=300>
+<img src="img/a.svg" width=300 align="center">
 
 
 Build

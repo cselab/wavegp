@@ -86,16 +86,13 @@ loss: 922
   7: output 6
 loss: 0
 ```
-
 <img src="img/lifting.svg" width=100 align="center">
 <img src="img/inverse.svg" width=100 align="center">
-
-
 
 # References
 
 - Julian Miller's CGP code
-  [https://github.com/paul-kaufmann/cgp>
+  [code](https://github.com/paul-kaufmann/cgp)
 
 - <https://www.kartezio.com>
 - <https://zenodo.org/records/3889163>

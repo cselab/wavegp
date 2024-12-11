@@ -32,3 +32,9 @@ $ python graphviz.py a.raw a
 graphviz.py: a.00000000.gv
 graphviz.py: a.00000001.gv
 ```
+
+# References
+
+- <https://www.kartezio.com>
+- <https://zenodo.org/records/3889163>
+- <https://www.cgplibrary.co.uk/files2/About-txt.html>

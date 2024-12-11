@@ -1,7 +1,7 @@
 import wavegp
 import sys
 import numpy as np
-
+import random
 
 class g:
     pass
@@ -74,6 +74,7 @@ def diff(a, b):
     return np.mean(diff**2)
 
 
+random.seed(2)
 N = 10
 Y, X = np.meshgrid(range(N), range(N))
 x0 = Y**2 + 2 * X**2
@@ -92,12 +93,20 @@ g.a = 2
 g.p = 0
 gen0 = wavegp.build(g, ["i0", "Backward_Y", "Backward_X", "Minus", "o0"],
                     [(0, 1), (0, 2), (1, 3), (2, 3), (3, 4)], [])
-gen1 = wavegp.build(
+gen1 = wavegp.rand(g)
+gen2 = wavegp.build(
     g,
     ["i0", "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus", "o0"],
     [(0, 1), (1, 2), (2, 5), (0, 3), (3, 4), (4, 5), (5, 6)], [])
-print(wavegp.as_string(g, gen1))
 
-for gen in gen0, gen1:
+gen3 = wavegp.build(
+    g,
+    ["i0", "Backward_Y", "Forward_Y", "Backward_X", "Forward_X", "Plus", "o0"],
+    [(0, 1), (1, 2), (2, 5), (0, 3), (3, 4), (4, 5), (5, 6)], [])
+
+
+for gen in gen0, gen1, gen2, gen3:
+    sys.stdout.write(wavegp.as_string(g, gen))
     y, = execute(gen, [x0])
-    print(diff(y, y0))
+    sys.stdout.write("loss: %g\n\n" % diff(y, y0))
+    

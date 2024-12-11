@@ -3,7 +3,7 @@ import numpy as np
 import re
 import struct
 import io
-
+import random
 
 class UnknownFormatString(Exception):
     pass
@@ -13,6 +13,17 @@ dtype = np.dtype("uint8")
 max_val = 256
 graphviz_colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
 
+def rand(g):
+    gen = np.zeros((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
+    for j in range(g.n):
+        gen[g.i + j, 0] = random.randrange(len(g.names))
+        for k in range(g.a):
+            gen[g.i + j, 1 + k] = random.randrange(g.i + j)
+        for k in range(g.p):
+            gen[g.i + j, 1 + g.a + k] = random.randrange(max_val)
+    for j in range(g.o):
+        gen[g.i + g.n + j, 1] = random.randrange(g.i + g.n)
+    return gen
 
 def as_string(g, gen, All=False):
     o = io.StringIO()

@@ -11,6 +11,7 @@ class UnknownFormatString(Exception):
 
 dtype = np.dtype("uint8")
 max_val = 256
+graphviz_colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
 
 def as_string(g, gen, All=False):
     o = io.StringIO()
@@ -34,6 +35,31 @@ def as_string(g, gen, All=False):
             o.write("\n")
     for i in range(g.o):
         o.write("%3d: output %d\n" % (g.i + g.n + i, gen[g.i + g.n + i, 1]))
+    return o.getvalue()
+
+def as_graphviz(g, gen):
+    o = io.StringIO()
+    o.write("digraph {\n")
+    for j in range(g.i):
+        o.write(f"  {j} [label = i{j}]\n")
+    for n in reachable_nodes(g, gen):
+        arity = g.arity[gen[n, 0]]
+        args = g.args[gen[n, 0]]
+        o.write(f'  {n} [label = "{g.names[gen[n, 0]]}')
+        for j in range(args):
+            o.write(f", {gen[n, 1 + g.a + j]}")
+        o.write('"]\n')
+        for j in range(arity):
+            if arity == 1:
+                o.write(f"  {gen[n, 1 + j]} -> {n}\n")
+            else:
+                k = j % len(graphviz_colors)
+                o.write(
+                    f"  {gen[n, 1 + j]} -> {n} [color = {graphviz_colors[j]}]\n")
+    for j in range(g.o):
+        o.write(f"  {g.i + g.n + j} [label = o{j}]\n")
+        o.write(f"  {gen[g.i + g.n + j, 1]} -> {g.i + g.n + j}\n")
+    o.write("}\n")
     return o.getvalue()
 
 

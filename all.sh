@@ -1,6 +1,5 @@
 #!/bin/sh
 python build.py a.raw
 python read.py a.raw
-python graphviz.py a.raw a
-for i in a.*.gv; do dot $i -Gsize=4,4\! -T svg -o ${i%.gv}.svg; done
-cp a.00000000.svg a.00000001.svg img/
+python graphviz.py a.raw a.gv
+gvpack -u a.gv | dot -Tsvg -o img/a.svg

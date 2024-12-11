@@ -16,9 +16,8 @@ n_genes =  2
   3: Minus [0, 0] 1 2 *
  11: output 3
 
-$ python graphviz.py a.raw a
-graphviz.py: a.00000000.gv
-graphviz.py: a.00000001.gv
+$ python graphviz.py a.raw a.gv
+graphviz.py: a.gv
 ```
 
 Convert to images
@@ -27,8 +26,7 @@ Convert to images
 $ for i in a.*.gv; do dot $i -T png -o ${i%.gv}.png; done
 ```
 
-<img src="img/a.00000000.svg" width=300>
-<img src="img/a.00000001.svg" width=300>
+<img src="img/a.svg" width=300>
 
 
 Build

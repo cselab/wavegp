@@ -81,9 +81,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-gen0 = wavegp.rand(g)
-gen1 = wavegp.rand(g)
-gen2 = wavegp.build(
+gen_forward = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
     ["i0", "Odd", "Even", "Minus", "U", "Plus", "Merge", "o0"],
@@ -91,10 +89,20 @@ gen2 = wavegp.build(
      (6, 7)],
     [])
 
-for gen in gen0, gen1, gen2:
+gen_backward = wavegp.build(
+    g,
+    #  0      1       2    3        4       5        6     7
+    ["i0", "Odd", "Even", "U", "Minus", "Plus", "Merge", "o0"],
+    [(0, 1), (0, 2), (1, 3), (2, 3), (2, 4), (3, 4), (1, 5), (4, 5), (4, 6),
+     (5, 6), (6, 7)],
+    [])
+
+for gen in [gen_backward]:
     sys.stdout.write(wavegp.as_string(g, gen))
-    y, = wavegp.execute(g, gen, [x0])
-    sys.stdout.write("loss: %g\n\n" % diff(y, y0))
-    with open("lifting.gv", "w") as f:
+    x, = wavegp.execute(g, gen, [y0])
+    print(*x)
+    print(*x0)
+    sys.stdout.write("loss: %g\n\n" % diff(x, x0))
+    with open("inverse.gv", "w") as f:
         f.write(wavegp.as_graphviz(g, gen))
-    subprocess.run(["dot", "lifting.gv", "-T", "svg", "-o", "img/lifting.svg"])
+    subprocess.run(["dot", "inverse.gv", "-T", "svg", "-o", "img/inverse.svg"])

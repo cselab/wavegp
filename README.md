@@ -37,4 +37,6 @@ graphviz.py: a.00000001.gv
 
 - <https://www.kartezio.com>
 - <https://zenodo.org/records/3889163>
-- <https://www.cgplibrary.co.uk/files2/About-txt.html>
+- <https://www.cgplibrary.co.uk>
+- <https://github.com/paul-kaufmann/cgp>
+- <https://github.com/um-tech-evolution/CartesianGP.jl>

@@ -23,20 +23,11 @@ graphviz.py: a.gv
 Convert to images
 
 ```
-$ for i in a.*.gv; do dot $i -T png -o ${i%.gv}.png; done
+$ gvpack -u a.gv | dot -Tsvg -o img/a.svg
 ```
 
 <img src="img/a.svg" width=300 align="center">
 
-
-Build
-
-```
-$ python build.py a.raw
-$ python graphviz.py a.raw a
-graphviz.py: a.00000000.gv
-graphviz.py: a.00000001.gv
-```
 
 # References
 

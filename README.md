@@ -28,6 +28,39 @@ $ gvpack -u a.gv | dot -Tsvg -o img/a.svg
 
 <img src="img/a.svg" width=300 align="center">
 
+```
+$ python execute.py
+  0: input
+  1: Backward_Y [] 0 *
+  2: Backward_X [] 0 *
+  3: Minus [] 1 2 *
+ 11: output 3
+loss: 301
+
+  0: input
+  2: Backward_Y [] 0 *
+ 11: output 2
+loss: 25
+
+  0: input
+  1: Backward_X [] 0 *
+  2: Forward_X [] 1 *
+  3: Backward_Y [] 0 *
+  4: Forward_Y [] 3 *
+  5: Plus [] 2 4 *
+ 11: output 5
+loss: 0
+
+  0: input
+  1: Backward_Y [] 0 *
+  2: Forward_Y [] 1 *
+  3: Backward_X [] 0 *
+  4: Forward_X [] 3 *
+  5: Plus [] 2 4 *
+ 11: output 5
+loss: 0
+```
+
 
 # References
 

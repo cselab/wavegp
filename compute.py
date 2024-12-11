@@ -6,6 +6,18 @@ class g:
     pass
 
 
+def evaluate(gen):
+    topo = stopo(gen)
+    Cost = 0
+    values = {i: x[i] for i in range(g.i)}
+    for n in topo:
+        arity = g.nodes[gen[n, 0]].arity
+        inputs = [values[i] for i in gen[n, 1:1 + arity]]
+        params = gen[n, 1 + g.a:]
+        values[n] = g.nodes[gen[n, 0]].call(inputs, params)
+    return [values[j] for j in gen[g.i + g.n:, 1]]
+
+
 g.names = "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus", "Minus"
 Names = {name: index for index, name in enumerate(g.names)}
 g.arity = 1, 1, 1, 1, 2, 2

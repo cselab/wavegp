@@ -61,6 +61,34 @@ loss: 0
 loss: 0
 ```
 
+<img src="img/lifting.svg" width=300 align="center">
+
+```
+$ python lifting.py
+  0: input
+  1: Merge [] 0 0 *
+  2: Even [] 1 *
+  3: U [] 2 *
+  6: U [] 3 *
+  7: output 6
+loss: 724
+
+  0: input
+  1: P [] 0 *
+  7: output 1
+loss: 922
+
+  0: input
+  1: Odd [] 0 *
+  2: Even [] 0 *
+  3: Minus [] 1 2 *
+  4: U [] 3 *
+  5: Plus [] 2 4 *
+  6: Merge [] 5 3 *
+  7: output 6
+loss:
+```
+
 
 # References
 

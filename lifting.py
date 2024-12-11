@@ -77,7 +77,7 @@ g.arity = 1, 1, 2, 2, 1, 1, 2
 g.args = 0, 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
 g.i = 1
-g.n = 11
+g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
@@ -91,12 +91,10 @@ gen2 = wavegp.build(
      (6, 7)],
     [])
 
-for gen in [gen2]:
+for gen in gen0, gen1, gen2:
     sys.stdout.write(wavegp.as_string(g, gen))
     y, = wavegp.execute(g, gen, [x0])
-    print(y)
-    print(y0)
     sys.stdout.write("loss: %g\n\n" % diff(y, y0))
-    with open("a.gv", "w") as f:
+    with open("lifting.gv", "w") as f:
         f.write(wavegp.as_graphviz(g, gen))
-    rc = subprocess.run(["dot", "a.gv", "-Tpng", "-o", "a.png"])
+    subprocess.run(["dot", "lifting.gv", "-T", "svg", "-o", "img/lifting.svg"])

@@ -13,6 +13,7 @@ dtype = np.dtype("uint8")
 max_val = 256
 graphviz_colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
 
+
 def as_string(g, gen, All=False):
     o = io.StringIO()
     rn = reachable_nodes(g, gen)
@@ -37,6 +38,7 @@ def as_string(g, gen, All=False):
         o.write("%3d: output %d\n" % (g.i + g.n + i, gen[g.i + g.n + i, 1]))
     return o.getvalue()
 
+
 def as_graphviz(g, gen):
     o = io.StringIO()
     o.write("digraph {\n")
@@ -55,7 +57,8 @@ def as_graphviz(g, gen):
             else:
                 k = j % len(graphviz_colors)
                 o.write(
-                    f"  {gen[n, 1 + j]} -> {n} [color = {graphviz_colors[j]}]\n")
+                    f"  {gen[n, 1 + j]} -> {n} [color = {graphviz_colors[j]}]\n"
+                )
     for j in range(g.o):
         o.write(f"  {g.i + g.n + j} [label = o{j}]\n")
         o.write(f"  {gen[g.i + g.n + j, 1]} -> {g.i + g.n + j}\n")

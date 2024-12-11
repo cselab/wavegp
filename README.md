@@ -1,21 +1,24 @@
 # wavegp
 
 ```
-$ python write.py a.raw
+$ python build.py a.raw
 $ python read.py a.raw
-n_genes =  8
-['Backward_X', 'Forward_X', 'Backward_Y', 'Forward_Y', 'Plus', 'Minus']
-(1, 1, 1, 1, 2, 2)
-(0, 0, 0, 0, 0, 0)
+n_genes =  2
+  0: input
+  1: Backward_Y [10] 0 *
+  2: Backward_X [20] 0 *
+  3: Minus [40, 30] 1 2 *
+ 11: output 3
+
+  0: input
+  1: Backward_Y [0] 0 *
+  2: Backward_X [0] 1 *
+  3: Minus [0, 0] 1 2 *
+ 11: output 3
+
 $ python graphviz.py a.raw a
 graphviz.py: a.00000000.gv
 graphviz.py: a.00000001.gv
-graphviz.py: a.00000002.gv
-graphviz.py: a.00000003.gv
-graphviz.py: a.00000004.gv
-graphviz.py: a.00000005.gv
-graphviz.py: a.00000006.gv
-graphviz.py: a.00000007.gv
 ```
 
 Convert to images
@@ -23,6 +26,10 @@ Convert to images
 ```
 $ for i in a.*.gv; do dot $i -T png -o ${i%.gv}.png; done
 ```
+
+<img src="img/img/a.00000000.svg" width=300 align="center">
+<img src="img/img/a.00000001.svg" width=300 align="center">
+
 
 Build
 
@@ -35,9 +42,11 @@ graphviz.py: a.00000001.gv
 
 # References
 
+- Julian Miller's CGP code
+  [https://github.com/paul-kaufmann/cgp>
+
 - <https://www.kartezio.com>
 - <https://zenodo.org/records/3889163>
-- <https://github.com/paul-kaufmann/cgp>
 - <https://github.com/um-tech-evolution/CartesianGP.jl>
 
 - CGP++

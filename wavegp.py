@@ -2,6 +2,7 @@ import collections
 import numpy as np
 import re
 import struct
+import io
 
 
 class UnknownFormatString(Exception):
@@ -10,6 +11,30 @@ class UnknownFormatString(Exception):
 
 dtype = np.dtype("uint8")
 max_val = 256
+
+def as_string(g, gen, All=False):
+    o = io.StringIO()
+    rn = reachable_nodes(g, gen)
+    for i in range(g.i):
+        o.write("%3d: input\n" % i)
+    for i in range(g.n):
+        if All or g.i + i in rn:
+            o.write("%3d: %s" % (g.i + i, g.names[gen[g.i + i, 0]]))
+            p = io.StringIO()
+            args = g.args[gen[g.i + i, 0]]
+            for j in range(args):
+                if j > 0:
+                    p.write(", ")
+                p.write("%d" % gen[g.i + i, 1 + g.a + j])
+            o.write(" [%s]" % p.getvalue())
+            for j in range(g.arity[gen[g.i + i, 0]]):
+                o.write(" %d" % gen[g.i + i, 1 + j])
+            if g.i + i in rn:
+                o.write(" *")
+            o.write("\n")
+    for i in range(g.o):
+        o.write("%3d: output %d\n" % (g.i + g.n + i, gen[g.i + g.n + i, 1]))
+    return o.getvalue()
 
 
 def build(g, verts, edgs, params):

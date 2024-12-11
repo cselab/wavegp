@@ -61,8 +61,6 @@ loss: 0
 loss: 0
 ```
 
-<img src="img/lifting.svg" width=300 align="center">
-
 ```
 $ python lifting.py
   0: input
@@ -88,6 +86,9 @@ loss: 922
   7: output 6
 loss:
 ```
+
+<img src="img/lifting.svg" width=100 align="center">
+
 
 
 # References

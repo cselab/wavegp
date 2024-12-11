@@ -88,6 +88,7 @@ loss: 0
 ```
 
 <img src="img/lifting.svg" width=100 align="center">
+<img src="img/inverse.svg" width=100 align="center">
 
 
 

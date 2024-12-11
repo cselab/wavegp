@@ -5,6 +5,7 @@ import struct
 import io
 import random
 
+
 class UnknownFormatString(Exception):
     pass
 
@@ -12,6 +13,19 @@ class UnknownFormatString(Exception):
 dtype = np.dtype("uint8")
 max_val = 256
 graphviz_colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "cyan", "magenta"
+
+
+def execute(g, gen, x):
+    rn = reachable_nodes(g, gen)
+    Cost = 0
+    values = {i: x[i] for i in range(g.i)}
+    for n in rn:
+        arity = g.arity[gen[n, 0]]
+        inputs = [values[i] for i in gen[n, 1:1 + arity]]
+        params = gen[n, 1 + g.a:]
+        values[n] = g.nodes[gen[n, 0]](inputs, params)
+    return [values[j] for j in gen[g.i + g.n:, 1]]
+
 
 def rand(g):
     gen = np.zeros((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
@@ -24,6 +38,7 @@ def rand(g):
     for j in range(g.o):
         gen[g.i + g.n + j, 1] = random.randrange(g.i + g.n)
     return gen
+
 
 def as_string(g, gen, All=False):
     o = io.StringIO()

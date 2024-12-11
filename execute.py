@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import random
 
+
 class g:
     pass
 
@@ -57,18 +58,6 @@ def Minus(inp, args):
     return x - y
 
 
-def execute(gen, x):
-    rn = wavegp.reachable_nodes(g, gen)
-    Cost = 0
-    values = {i: x[i] for i in range(g.i)}
-    for n in rn:
-        arity = g.arity[gen[n, 0]]
-        inputs = [values[i] for i in gen[n, 1:1 + arity]]
-        params = gen[n, 1 + g.a:]
-        values[n] = g.nodes[gen[n, 0]](inputs, params)
-    return [values[j] for j in gen[g.i + g.n:, 1]]
-
-
 def diff(a, b):
     diff = np.subtract(a[1:-1, 1:-1], b[1:-1, 1:-1])
     return np.mean(diff**2)
@@ -104,9 +93,7 @@ gen3 = wavegp.build(
     ["i0", "Backward_Y", "Forward_Y", "Backward_X", "Forward_X", "Plus", "o0"],
     [(0, 1), (1, 2), (2, 5), (0, 3), (3, 4), (4, 5), (5, 6)], [])
 
-
 for gen in gen0, gen1, gen2, gen3:
     sys.stdout.write(wavegp.as_string(g, gen))
-    y, = execute(gen, [x0])
+    y, = wavegp.execute(g, gen, [x0])
     sys.stdout.write("loss: %g\n\n" % diff(y, y0))
-    

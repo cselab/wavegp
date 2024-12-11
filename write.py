@@ -4,6 +4,7 @@ import random
 import wavegp
 import sys
 
+
 class g:
     pass
 

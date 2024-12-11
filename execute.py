@@ -63,7 +63,7 @@ def diff(a, b):
     return np.mean(diff**2)
 
 
-random.seed(2)
+random.seed(3)
 N = 10
 Y, X = np.meshgrid(range(N), range(N))
 x0 = Y**2 + 2 * X**2
@@ -71,7 +71,6 @@ y0 = np.full((N, N), 2 + 2 * 2)
 
 g.nodes = Backward_X, Forward_X, Backward_Y, Forward_Y, Plus, Minus
 g.names = "Backward_X", "Forward_X", "Backward_Y", "Forward_Y", "Plus", "Minus"
-Names = {name: index for index, name in enumerate(g.names)}
 g.arity = 1, 1, 1, 1, 2, 2
 g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
@@ -94,6 +93,6 @@ gen3 = wavegp.build(
     [(0, 1), (1, 2), (2, 5), (0, 3), (3, 4), (4, 5), (5, 6)], [])
 
 for gen in gen0, gen1, gen2, gen3:
-    sys.stdout.write(wavegp.as_string(g, gen))
+    sys.stdout.write(wavegp.as_string(g, gen, All=True))
     y, = wavegp.execute(g, gen, [x0])
     sys.stdout.write("loss: %g\n\n" % diff(y, y0))

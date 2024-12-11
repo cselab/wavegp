@@ -84,7 +84,7 @@ loss: 922
   5: Plus [] 2 4 *
   6: Merge [] 5 3 *
   7: output 6
-loss:
+loss: 0
 ```
 
 <img src="img/lifting.svg" width=100 align="center">

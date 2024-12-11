@@ -37,11 +37,18 @@ graphviz.py: a.00000001.gv
 
 - <https://www.kartezio.com>
 - <https://zenodo.org/records/3889163>
-- <https://www.cgplibrary.co.uk>
 - <https://github.com/paul-kaufmann/cgp>
 - <https://github.com/um-tech-evolution/CartesianGP.jl>
+
+- CGP++
+  [code](https://github.com/RomanKalkreuth/cgp-plusplus)
+  [article](https://doi.org/10.1145/3638529.3654092)
+
+- CGP-Library
+  [code](https://github.com/AndrewJamesTurner/CGP-Library)
+  [documentation](https://www.cgplibrary.co.uk)
+  [article](http://andrewjamesturner.co.uk/files/GPEM2014.pdf)
 
 - Miller, J. F. (2020). Cartesian genetic programming: its status and
   future. Genetic Programming and Evolvable Machines, 21(1), 129-168
   [10.1007/s10710-019-09360-6](https://doi.org/10.1007/s10710-019-09360-6)
-

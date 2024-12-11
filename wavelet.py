@@ -2,6 +2,7 @@ import wavegp
 import sys
 import numpy as np
 import random
+import subprocess
 
 
 class g:
@@ -67,8 +68,8 @@ def Merge(inp, args):
 random.seed(2)
 N = 8
 Y, X = np.meshgrid(range(N), range(N))
-x0 = 1, 2, 3, 4, 5, 6, 7, 8
-y0 = 1, 2, 3, 4, 5, 6, 7, 8
+x0 = 56, 40, 8, 24, 48, 48, 40, 16
+y0 = 48, -16, 16, 16, 48, 0, 28, -24
 
 g.nodes = Even, Odd, Plus, Minus, P, U, Merge
 g.names = "Even", "Odd", "Plus", "Minus", "P", "U", "Merge"
@@ -81,12 +82,21 @@ g.o = 1
 g.a = 2
 g.p = 0
 gen0 = wavegp.rand(g)
-gen1 = wavegp.build(g,
-                    ["i0", "Odd", "Even", "Minus", "Plus", "U", "Merge", "o0"],
-                    [(0, 1), (0, 2), (1, 3), (2, 3), (1, 4), (2, 4), (4, 5),
-                     (3, 6), (5, 6), (6, 7)], [])
+gen1 = wavegp.rand(g)
+gen2 = wavegp.build(
+    g,
+    #  0      1       2        3    4    5        6     7
+    ["i0", "Odd", "Even", "Minus", "U", "Plus", "Merge", "o0"],
+    [(0, 1), (0, 2), (1, 3), (2, 3), (3, 4), (2, 5), (4, 5), (5, 6), (3, 6),
+     (6, 7)],
+    [])
 
-for gen in [gen1]:
+for gen in [gen2]:
     sys.stdout.write(wavegp.as_string(g, gen))
     y, = wavegp.execute(g, gen, [x0])
+    print(y)
+    print(y0)
     sys.stdout.write("loss: %g\n\n" % diff(y, y0))
+    with open("a.gv", "w") as f:
+        f.write(wavegp.as_graphviz(g, gen))
+    rc = subprocess.run(["dot", "a.gv", "-Tpng", "-o", "a.png"])

@@ -40,3 +40,8 @@ graphviz.py: a.00000001.gv
 - <https://www.cgplibrary.co.uk>
 - <https://github.com/paul-kaufmann/cgp>
 - <https://github.com/um-tech-evolution/CartesianGP.jl>
+
+- Miller, J. F. (2020). Cartesian genetic programming: its status and
+  future. Genetic Programming and Evolvable Machines, 21(1), 129-168
+  [10.1007/s10710-019-09360-6](https://doi.org/10.1007/s10710-019-09360-6)
+

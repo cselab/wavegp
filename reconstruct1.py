@@ -16,6 +16,7 @@ def rand(project):
     project(gen)
     return gen
 
+
 def project0(gen):
     for j in range(g.n):
         if gen[g.i + j, 0] == Names["Odd"]:
@@ -120,6 +121,7 @@ def Merge(inp, args):
         z[2 * i] = x[i]
         z[2 * i + 1] = y[i]
     return z
+
 
 random.seed(2)
 N = 1 << 3

@@ -22,24 +22,21 @@ def rand(project):
 def mutate(i, genes, project):
     mutate_prob = 0.2
     genes[0], genes[i] = genes[i], genes[0]
-    # topo = wavegp.reachable_nodes(g, genes[0])
     for i in range(1, g.lmb + 1):
-        while True:
-            genes[i] = copy.copy(genes[0])
-            for m in range(n_mutations):
-                j = random.randrange(g.n)
-                k = random.randrange(1 + g.a + g.p)
-                if k == 0:
-                    genes[i][g.i + j, 0] = random.randrange(len(g.nodes))
-                elif k <= g.a:
-                    genes[i][g.i + j, k] = random.randrange(g.i + j)
-                else:
-                    genes[i][g.i + j, k] = random.randrange(g.max_val)
-            for k in range(g.o):
-                if random.random() < mutate_prob:
-                    genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
-            project(genes[i])
-            break
+        genes[i] = copy.copy(genes[0])
+        for m in range(n_mutations):
+            j = random.randrange(g.n)
+            k = random.randrange(1 + g.a + g.p)
+            if k == 0:
+                genes[i][g.i + j, 0] = random.randrange(len(g.nodes))
+            elif k <= g.a:
+                genes[i][g.i + j, k] = random.randrange(g.i + j)
+            else:
+                genes[i][g.i + j, k] = random.randrange(g.max_val)
+        for k in range(g.o):
+            if random.random() < mutate_prob:
+                genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
+        project(genes[i])
 
 
 def project0(gen):
@@ -51,13 +48,18 @@ def project0(gen):
 
 
 def project_forward(gen):
-    gen[:] = forward0[:]
-    return
+    # gen[:] = forward0[:]
+    # return
+    j = gen[g.i + g.n + 0, 1]
+    gen[j, 0] = Names["Merge"]
+    gen[gen[j, 1 + 0], 0] = Names["Plus"]
+    gen[gen[j, 1 + 1], 0] = Names["Minus"]
+    project0(gen)
+
 
 def project_backward(gen):
     j = gen[g.i + g.n + 0, 1]
     gen[j, 0] = Names["Merge"]
-
     gen[gen[j, 1 + 0], 0] = Names["Minus"]
     gen[gen[j, 1 + 1], 0] = Names["Plus"]
     project0(gen)
@@ -157,7 +159,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-g.lmb = 100
+g.lmb = 1000
 g.hits = 0
 forward0 = wavegp.build(
     g,
@@ -176,14 +178,14 @@ backward0 = wavegp.build(
     [])
 
 xx = [example() for i in range(5)]
-project_forward(forward0)
-project_backward(backward0)
+# project_forward(forward0)
+# project_backward(backward0)
 cost0 = fun([forward0, backward0])
 sys.stdout.write(f"reference cost {cost0:.16e}\n")
 
 genes_forward = [rand(project_forward) for i in range(g.lmb + 1)]
 genes_backward = [rand(project_backward) for i in range(g.lmb + 1)]
-n_mutations = 50 * g.n * (1 + g.a + g.p) // 100
+n_mutations = 30 * g.n * (1 + g.a + g.p) // 100
 generation = 0
 max_generation = 10000000000
 while True:

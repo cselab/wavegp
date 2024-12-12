@@ -143,7 +143,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-g.lmb = 100000
+g.lmb = 10000
 forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7

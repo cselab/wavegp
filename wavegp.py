@@ -103,6 +103,9 @@ def as_graphviz(g, gen):
 
 
 def build(g, verts, edgs, params):
+    assert len(verts) <= g.i + g.n + g.o
+    assert max(v for edg in edgs for v in edg) < len(verts)
+    assert min(v for edg in edgs for v in edg) >= 0
     Names = {name: index for index, name in enumerate(g.names)}
     gen = np.zeros((g.i + g.n + g.o, 1 + g.a + g.p), dtype=np.uint8)
     cnt = 0

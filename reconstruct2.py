@@ -18,6 +18,7 @@ def rand():
     project(gen)
     return gen
 
+
 Hash = set()
 
 
@@ -48,9 +49,16 @@ def mutate(i, genes):
             else:
                 g.hits += 1
 
+
 def project(gen):
     j = gen[g.i + g.n + 0, 1]
     gen[j, 0] = Names["Merge"]
+    for j in range(g.n):
+        if gen[g.i + j, 0] == Names["Odd"]:
+            gen[g.i + j, 1] = 0
+        elif gen[g.i + j, 0] == Names["Even"]:
+            gen[g.i + j, 1] = 0
+
 
 def fun(pair):
     forward, backward = pair
@@ -137,7 +145,7 @@ random.seed(2)
 N = 1 << 3
 g.nodes = Even, Odd, Plus, Minus, U, Merge
 g.names = "Even", "Odd", "Plus", "Minus", "U", "Merge"
-Names = {name : i for i, name in enumerate(g.names)}
+Names = {name: i for i, name in enumerate(g.names)}
 g.arity = 1, 1, 2, 2, 1, 2
 g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
@@ -165,6 +173,8 @@ backward0 = wavegp.build(
     [])
 
 xx = [example() for i in range(5)]
+project(forward0)
+project(backward0)
 cost0 = fun([forward0, backward0])
 sys.stdout.write(f"reference cost {cost0:.16e}\n")
 
@@ -178,7 +188,8 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        sys.stdout.write(f"{generation:08} {len(Hash):10} {g.hits:10} {costs[i]:.16e}\n")
+        sys.stdout.write(
+            f"{generation:08} {len(Hash):10} {g.hits:10} {costs[i]:.16e}\n")
         print(wavegp.as_string(g, genes_forward[i]))
         print(wavegp.as_string(g, genes_backward[i]))
     if generation == max_generation:

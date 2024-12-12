@@ -183,7 +183,7 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        sys.stdout.write(f"{generation:08} {g.hits:10} {g.hits:10} {costs[i]:.16e}\n")
+        sys.stdout.write(f"{generation:08} {len(Hash):10} {g.hits:10} {costs[i]:.16e}\n")
     if generation == max_generation:
         break
     generation += 1

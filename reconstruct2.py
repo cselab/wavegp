@@ -48,8 +48,8 @@ def project0(gen):
 
 
 def project_forward(gen):
-    # gen[:] = forward0[:]
-    # return
+    gen[:] = forward0[:]
+    return
     j = gen[g.i + g.n + 0, 1]
     gen[j, 0] = Names["Merge"]
     gen[gen[j, 1 + 0], 0] = Names["Plus"]
@@ -187,15 +187,16 @@ genes_forward = [rand(project_forward) for i in range(g.lmb + 1)]
 genes_backward = [rand(project_backward) for i in range(g.lmb + 1)]
 n_mutations = 30 * g.n * (1 + g.a + g.p) // 100
 generation = 0
-max_generation = 10000000000
+max_generation = 15
 while True:
     with multiprocessing.Pool() as pool:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
-    if generation % 100 == 0:
+    if generation % 1 == 0:
         sys.stdout.write(f"{generation:08} {costs[i]:.16e}\n")
-        print(wavegp.as_string(g, genes_forward[i]))
-        print(wavegp.as_string(g, genes_backward[i]))
+        sys.stdout.write("forward\n" + wavegp.as_string(g, genes_forward[i]))
+        sys.stdout.write("backward\n" + wavegp.as_string(g, genes_backward[i]))
+        sys.stdout.write("\n")
     if generation == max_generation:
         break
     generation += 1

@@ -100,8 +100,6 @@ gen_backward = wavegp.build(
 for gen in [gen_backward]:
     sys.stdout.write(wavegp.as_string(g, gen))
     x, = wavegp.execute(g, gen, [y0])
-    print(*x)
-    print(*x0)
     sys.stdout.write("cost: %g\n\n" % diff(x, x0))
     with open("inverse.gv", "w") as f:
         f.write(wavegp.as_graphviz(g, gen))

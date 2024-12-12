@@ -11,17 +11,35 @@ class g:
     pass
 
 
-def rand():
-    while True:
-        gen = wavegp.rand(g)
-        if good(gen):
-            return gen
+def rand(project):
+    gen = wavegp.rand(g)
+    project(gen)
+    return gen
+
+def project0(gen):
+    for j in range(g.n):
+        if gen[g.i + j, 0] == Names["Odd"]:
+            gen[g.i + j, 1] = 0
+        elif gen[g.i + j, 0] == Names["Even"]:
+            gen[g.i + j, 1] = 0
 
 
-def good(gen):
-    rn = wavegp.reachable_nodes(g, gen)
+def project_forward(gen):
+    gen[:] = forward0[:]
+    return
     j = gen[g.i + g.n + 0, 1]
-    return j > g.i and Names[gen[j, 0]] == "Merge"
+    gen[j, 0] = Names["Merge"]
+    gen[gen[j, 1 + 0], 0] = Names["Plus"]
+    gen[gen[j, 1 + 1], 0] = Names["Minus"]
+    project0(gen)
+
+
+def project_backward(gen):
+    j = gen[g.i + g.n + 0, 1]
+    gen[j, 0] = Names["Merge"]
+    gen[gen[j, 1 + 0], 0] = Names["Minus"]
+    gen[gen[j, 1 + 1], 0] = Names["Plus"]
+    project0(gen)
 
 
 def fun(forward, backward):
@@ -103,12 +121,11 @@ def Merge(inp, args):
         z[2 * i + 1] = y[i]
     return z
 
-
 random.seed(2)
 N = 1 << 3
 g.nodes = Even, Odd, Plus, Minus, U, Merge
 g.names = "Even", "Odd", "Plus", "Minus", "U", "Merge"
-Names = dict(enumerate(g.names))
+Names = {name: i for i, name in enumerate(g.names)}
 g.arity = 1, 1, 2, 2, 1, 2
 g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
@@ -135,22 +152,23 @@ backward0 = wavegp.build(
 
 xx = [example() for i in range(5)]
 sys.stdout.write("cost: %g\n" % fun(forward0, backward0))
+project_forward(forward0)
+project_backward(backward0)
 cost0 = fun(forward0, backward0)
-
 best = sys.float_info.max, None, None
 
-i = 0
+generation = 0
 while True:
-    forward = rand()
-    backward = rand()
+    forward = rand(project_forward)
+    backward = rand(project_backward)
     cost = fun(forward, backward)
-    if i % 10000 == 0:
-        print("epoch: ", i)
-    i += 1
     if cost < best[0]:
         wavegp.as_image(g, forward, "best.forward.png")
         wavegp.as_image(g, backward, "best.backward.png")
-        print(wavegp.as_string(g, forward))
-        print(wavegp.as_string(g, backward))
+        sys.stdout.write("forward\n" + wavegp.as_string(g, forward))
+        sys.stdout.write("backward\n" + wavegp.as_string(g, backward))
+        sys.stdout.write("\n")
         best = cost, forward, backward
-        print(cost, cost0)
+    if generation % 10000 == 0:
+        sys.stdout.write(f"{generation:015} {best[0]:.16e} {cost0:.16e}\n")
+    generation += 1

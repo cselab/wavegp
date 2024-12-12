@@ -95,4 +95,4 @@ gen3 = wavegp.build(
 for gen in gen0, gen1, gen2, gen3:
     sys.stdout.write(wavegp.as_string(g, gen, All=True))
     y, = wavegp.execute(g, gen, [x0])
-    sys.stdout.write("loss: %g\n\n" % diff(y, y0))
+    sys.stdout.write("cost: %g\n\n" % diff(y, y0))

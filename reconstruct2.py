@@ -5,6 +5,8 @@ import random
 import subprocess
 import statistics
 import collections
+import multiprocessing
+import copy
 
 
 class g:
@@ -18,13 +20,37 @@ def rand():
             return gen
 
 
+def mutate(i, genes):
+    mutate_prob = 0.2
+    genes[0], genes[i] = genes[i], genes[0]
+    # topo = wavegp.reachable_nodes(g, genes[0])
+    for i in range(1, g.lmb + 1):
+        while True:
+            genes[i] = copy.copy(genes[0])
+            for m in range(n_mutations):
+                j = random.randrange(g.n)
+                k = random.randrange(1 + g.a + g.p)
+                if k == 0:
+                    genes[i][g.i + j, 0] = random.randrange(len(g.nodes))
+                elif k <= g.a:
+                    genes[i][g.i + j, k] = random.randrange(g.i + j)
+                else:
+                    genes[i][g.i + j, k] = random.randrange(g.max_val)
+            for k in range(g.o):
+                if random.random() < mutate_prob:
+                    genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
+            if good(genes[i]):
+                break
+
+
 def good(gen):
     rn = wavegp.reachable_nodes(g, gen)
     j = gen[g.i + g.n + 0, 1]
     return j > g.i and Names[gen[j, 0]] == "Merge"
 
 
-def fun(forward, backward):
+def fun(pair):
+    forward, backward = pair
     cost = []
     for x0 in xx:
         y, = wavegp.execute(g, forward, [x0])
@@ -117,6 +143,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
+g.lmb = 1000
 forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
@@ -134,23 +161,22 @@ backward0 = wavegp.build(
     [])
 
 xx = [example() for i in range(5)]
-sys.stdout.write("cost: %g\n" % fun(forward0, backward0))
-cost0 = fun(forward0, backward0)
+cost0 = fun([forward0, backward0])
+sys.stdout.write(f"reference cost {cost0:.16e}\n")
 
-best = sys.float_info.max, None, None
-
-i = 0
+genes_forward = [rand() for i in range(g.lmb + 1)]
+genes_backward = [rand() for i in range(g.lmb + 1)]
+n_mutations = 50 * g.n * (1 + g.a + g.p) // 100
+generation = 0
+max_generation = 100000
 while True:
-    forward = rand()
-    backward = rand()
-    cost = fun(forward, backward)
-    if i % 10000 == 0:
-        print("epoch: ", i)
-    i += 1
-    if cost < best[0]:
-        wavegp.as_image(g, forward, "best.forward.png")
-        wavegp.as_image(g, backward, "best.backward.png")
-        print(wavegp.as_string(g, forward))
-        print(wavegp.as_string(g, backward))
-        best = cost, forward, backward
-        print(cost, cost0)
+    with multiprocessing.Pool() as pool:
+        costs = pool.map(fun, zip(genes_forward, genes_backward))
+    i = np.argmin(costs)
+    if generation % 100 == 0:
+        print(f"{generation:08} {costs[i]:.16e}")
+    if generation == max_generation:
+        break
+    generation += 1
+    mutate(i, genes_forward)
+    mutate(i, genes_backward)

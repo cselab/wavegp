@@ -42,11 +42,11 @@ def rand(g):
     return gen
 
 
-def as_image(g, gen, path, fmt="png"):
+def as_image(g, gen, path, fmt="png", *args):
     with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as t:
         t.write(as_graphviz(g, gen))
         t.flush()
-        subprocess.run(["dot", t.name, "-T", fmt, "-o", path])
+        subprocess.run(["dot", t.name, "-T", fmt, "-o", path, *args])
 
 
 def as_string(g, gen, All=False):

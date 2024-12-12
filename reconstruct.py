@@ -100,4 +100,4 @@ y, = wavegp.execute(g, gen_forward, [x0])
 x, = wavegp.execute(g, gen_backward, [y])
 
 sys.stdout.write("loss1: %g\n" % diff(x, x0))
-wavegp.as_image(g, gen_forward, "a.svg", fmt="svg")
+wavegp.as_image(g, gen_forward, "a.svg")

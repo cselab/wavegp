@@ -20,13 +20,22 @@ $ python graphviz.py a.raw a.gv
 graphviz.py: a.gv
 ```
 
-Convert to images
+Parameter
+```
+gen0 = wavegp.build(g, ["i0", "Backward_Y", "Backward_X", "Minus", "o0"],
+                    [(0, 1), (0, 2), (1, 3), (2, 3),
+                     (3, 4)], [[], [10], [20], [40, 30], []])
+gen1 = wavegp.build(g, ["i0", "Backward_Y", "Backward_X", "Minus", "o0"],
+                    [(0, 1), (1, 2), (1, 3), (2, 3), (3, 4)], [])
+```
 
+Convert to images
 ```
 $ gvpack -u a.gv | dot -Tsvg -o img/a.svg
 ```
 
-<img src="img/a.svg" width=300 align="center">
+<p align="center"><img src="img/a.svg"></p>
+
 
 ```
 $ python execute.py

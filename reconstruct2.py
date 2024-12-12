@@ -47,6 +47,8 @@ def mutate(i, genes):
                 if not by in Hash:
                     Hash.add(by)
                     break
+                else:
+                    g.hits += 1
 
 
 def good(gen):
@@ -150,6 +152,7 @@ g.o = 1
 g.a = 2
 g.p = 0
 g.lmb = 100
+g.hits = 0
 forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
@@ -180,7 +183,7 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        sys.stdout.write(f"{generation:08} {costs[i]:.16e} {len(Hash):10}\n")
+        sys.stdout.write(f"{generation:08} {costs[i]:.16e} {len(g.hist):10}\n")
     if generation == max_generation:
         break
     generation += 1

@@ -3,10 +3,39 @@ import sys
 import numpy as np
 import random
 import subprocess
+import statistics
+import collections
 
 
 class g:
     pass
+
+
+def rand():
+    while True:
+        gen = wavegp.rand(g)
+        if good(gen):
+            return gen
+
+
+def good(gen):
+    rn = wavegp.reachable_nodes(g, gen)
+    j = gen[g.i + g.n + 0, 1]
+    return j > g.i and Names[gen[j, 0]] == "Merge"
+
+
+def fun(forward, backward):
+    loss = []
+    for x0 in xx:
+        y, = wavegp.execute(g, forward, [x0])
+        i, j, *rest = np.argsort(y[1::2])
+        y[2 * i + 1] = 0
+        y[2 * j + 1] = 0
+        x, = wavegp.execute(g, backward, [y])
+        l = diff(x, x0)
+        loss.append(l)
+    ans = statistics.mean(loss)
+    return ans
 
 
 def example():
@@ -76,21 +105,19 @@ def Merge(inp, args):
 
 
 random.seed(2)
-N = 8
-x0 = 56, 40, 8, 24, 48, 48, 40, 16
-y0 = 48, -16, 16, 16, 48, 0, 28, -24
-
-g.nodes = Even, Odd, Plus, Minus, P, U, Merge
-g.names = "Even", "Odd", "Plus", "Minus", "P", "U", "Merge"
-g.arity = 1, 1, 2, 2, 1, 1, 2
-g.args = 0, 0, 0, 0, 0, 0, 0
+N = 1 << 3
+g.nodes = Even, Odd, Plus, Minus, U, Merge
+g.names = "Even", "Odd", "Plus", "Minus", "U", "Merge"
+Names = dict(enumerate(g.names))
+g.arity = 1, 1, 2, 2, 1, 2
+g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
 g.i = 1
 g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-gen_forward0 = wavegp.build(
+forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
     ["i0", "Odd", "Even", "Minus", "U", "Plus", "Merge", "o0"],
@@ -98,7 +125,7 @@ gen_forward0 = wavegp.build(
      (6, 7)],
     [])
 
-gen_backward0 = wavegp.build(
+backward0 = wavegp.build(
     g,
     #  0      1       2    3        4       5        6     7
     ["i0", "Odd", "Even", "U", "Minus", "Plus", "Merge", "o0"],
@@ -106,10 +133,24 @@ gen_backward0 = wavegp.build(
      (5, 6), (6, 7)],
     [])
 
-sys.stdout.write(wavegp.as_string(g, gen_forward))
-sys.stdout.write("\n")
-sys.stdout.write(wavegp.as_string(g, gen_backward))
+xx = [example() for i in range(5)]
+sys.stdout.write("loss: %g\n" % fun(forward0, backward0))
+loss0 = fun(forward0, backward0)
 
-y, = wavegp.execute(g, gen_forward, [x0])
-x, = wavegp.execute(g, gen_backward, [y])
-sys.stdout.write("loss1: %g\n" % diff(x, x0))
+best = sys.float_info.max, None, None
+
+i = 0
+while True:
+    forward = rand()
+    backward = rand()
+    loss = fun(forward, backward)
+    if i % 10000 == 0:
+        print("epoch: ", i)
+    i += 1
+    if loss < best[0]:
+        wavegp.as_image(g, forward, "best.forward.png")
+        wavegp.as_image(g, backward, "best.backward.png")
+        print(wavegp.as_string(g, forward))
+        print(wavegp.as_string(g, backward))
+        best = loss, forward, backward
+        print(loss, loss0)

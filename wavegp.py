@@ -6,6 +6,7 @@ import io
 import random
 import tempfile
 import subprocess
+import copy
 
 
 class UnknownFormatString(Exception):
@@ -20,7 +21,7 @@ graphviz_colors = "red", "blue", "green", "orange", "purple", "brown", "pink", "
 def execute(g, gen, x):
     rn = reachable_nodes(g, gen)
     Cost = 0
-    values = {i: x[i] for i in range(g.i)}
+    values = {i: copy.copy(x[i]) for i in range(g.i)}
     for n in rn:
         arity = g.arity[gen[n, 0]]
         inputs = [values[i] for i in gen[n, 1:1 + arity]]

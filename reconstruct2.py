@@ -20,6 +20,9 @@ def rand():
             return gen
 
 
+Hash = set()
+
+
 def mutate(i, genes):
     mutate_prob = 0.2
     genes[0], genes[i] = genes[i], genes[0]
@@ -40,7 +43,10 @@ def mutate(i, genes):
                 if random.random() < mutate_prob:
                     genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
             if good(genes[i]):
-                break
+                by = genes[i].tobytes()
+                if not by in Hash:
+                    Hash.add(by)
+                    break
 
 
 def good(gen):
@@ -143,7 +149,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-g.lmb = 10000
+g.lmb = 10
 forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
@@ -174,7 +180,7 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        print(f"{generation:08} {costs[i]:.16e}")
+        sys.stdout.write(f"{generation:08} {costs[i]:.16e}\n")
     if generation == max_generation:
         break
     generation += 1

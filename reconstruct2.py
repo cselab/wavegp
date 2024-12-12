@@ -14,11 +14,9 @@ class g:
 
 
 def rand():
-    while True:
-        gen = wavegp.rand(g)
-        if good(gen):
-            return gen
-
+    gen = wavegp.rand(g)
+    project(gen)
+    return gen
 
 Hash = set()
 
@@ -42,20 +40,17 @@ def mutate(i, genes):
             for k in range(g.o):
                 if random.random() < mutate_prob:
                     genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
-            if good(genes[i]):
-                by = genes[i].tobytes()
-                if not by in Hash:
-                    Hash.add(by)
-                    break
-                else:
-                    g.hits += 1
+            project(genes[i])
+            by = genes[i].tobytes()
+            if not by in Hash:
+                Hash.add(by)
+                break
+            else:
+                g.hits += 1
 
-
-def good(gen):
-    rn = wavegp.reachable_nodes(g, gen)
+def project(gen):
     j = gen[g.i + g.n + 0, 1]
-    return j > g.i and Names[gen[j, 0]] == "Merge"
-
+    gen[j, 0] = Names["Merge"]
 
 def fun(pair):
     forward, backward = pair
@@ -142,7 +137,7 @@ random.seed(2)
 N = 1 << 3
 g.nodes = Even, Odd, Plus, Minus, U, Merge
 g.names = "Even", "Odd", "Plus", "Minus", "U", "Merge"
-Names = dict(enumerate(g.names))
+Names = {name : i for i, name in enumerate(g.names)}
 g.arity = 1, 1, 2, 2, 1, 2
 g.args = 0, 0, 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
@@ -184,6 +179,8 @@ while True:
     i = np.argmin(costs)
     if generation % 100 == 0:
         sys.stdout.write(f"{generation:08} {len(Hash):10} {g.hits:10} {costs[i]:.16e}\n")
+        print(wavegp.as_string(g, genes_forward[i]))
+        print(wavegp.as_string(g, genes_backward[i]))
     if generation == max_generation:
         break
     generation += 1

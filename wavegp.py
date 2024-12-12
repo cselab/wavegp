@@ -4,6 +4,8 @@ import re
 import struct
 import io
 import random
+import tempfile
+import subprocess
 
 
 class UnknownFormatString(Exception):
@@ -38,6 +40,13 @@ def rand(g):
     for j in range(g.o):
         gen[g.i + g.n + j, 1] = random.randrange(g.i + g.n)
     return gen
+
+
+def as_image(g, gen, path, fmt="png"):
+    with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as t:
+        t.write(as_graphviz(g, gen))
+        t.flush()
+        subprocess.run(["dot", t.name, "-T", fmt, "-o", path])
 
 
 def as_string(g, gen, All=False):

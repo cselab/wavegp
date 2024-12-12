@@ -9,6 +9,16 @@ class g:
     pass
 
 
+def example():
+    p = 2
+    q = 10
+    x = [random.randint(-p, p)]
+    for i in range(N - 1):
+        x.append(x[-1] + random.randint(-p, p))
+        p, q = q, p
+    return np.array(x, dtype=float)
+
+
 def diff(a, b):
     diff = np.subtract(a, b)
     return np.mean(diff**2)
@@ -80,7 +90,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-gen_forward = wavegp.build(
+gen_forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
     ["i0", "Odd", "Even", "Minus", "U", "Plus", "Merge", "o0"],
@@ -88,7 +98,7 @@ gen_forward = wavegp.build(
      (6, 7)],
     [])
 
-gen_backward = wavegp.build(
+gen_backward0 = wavegp.build(
     g,
     #  0      1       2    3        4       5        6     7
     ["i0", "Odd", "Even", "U", "Minus", "Plus", "Merge", "o0"],
@@ -96,8 +106,10 @@ gen_backward = wavegp.build(
      (5, 6), (6, 7)],
     [])
 
+sys.stdout.write(wavegp.as_string(g, gen_forward))
+sys.stdout.write("\n")
+sys.stdout.write(wavegp.as_string(g, gen_backward))
+
 y, = wavegp.execute(g, gen_forward, [x0])
 x, = wavegp.execute(g, gen_backward, [y])
-
 sys.stdout.write("loss1: %g\n" % diff(x, x0))
-wavegp.as_image(g, gen_forward, "a.svg", fmt="svg")

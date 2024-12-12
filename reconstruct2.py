@@ -13,16 +13,13 @@ class g:
     pass
 
 
-def rand():
+def rand(project):
     gen = wavegp.rand(g)
     project(gen)
     return gen
 
 
-Hash = set()
-
-
-def mutate(i, genes):
+def mutate(i, genes, project):
     mutate_prob = 0.2
     genes[0], genes[i] = genes[i], genes[0]
     # topo = wavegp.reachable_nodes(g, genes[0])
@@ -42,22 +39,36 @@ def mutate(i, genes):
                 if random.random() < mutate_prob:
                     genes[i][g.i + g.n + k, 1] = random.randrange(g.i + g.n)
             project(genes[i])
-            by = genes[i].tobytes()
-            if not by in Hash:
-                Hash.add(by)
-                break
-            else:
-                g.hits += 1
+            break
 
 
-def project(gen):
-    j = gen[g.i + g.n + 0, 1]
-    gen[j, 0] = Names["Merge"]
+def project0(gen):
     for j in range(g.n):
         if gen[g.i + j, 0] == Names["Odd"]:
             gen[g.i + j, 1] = 0
         elif gen[g.i + j, 0] == Names["Even"]:
             gen[g.i + j, 1] = 0
+
+
+def project_forward(gen):
+    gen[:] = forward0[:]
+
+    j = gen[g.i + g.n + 0, 1]
+    gen[j, 0] = Names["Merge"]
+
+    gen[gen[j, 1 + 0], 0] = Names["Plus"]
+    gen[gen[j, 1 + 1], 0] = Names["Minus"]
+
+    project0(gen)
+
+
+def project_backward(gen):
+    j = gen[g.i + g.n + 0, 1]
+    gen[j, 0] = Names["Merge"]
+
+    gen[gen[j, 1 + 0], 0] = Names["Minus"]
+    gen[gen[j, 1 + 1], 0] = Names["Plus"]
+    project0(gen)
 
 
 def fun(pair):
@@ -173,13 +184,13 @@ backward0 = wavegp.build(
     [])
 
 xx = [example() for i in range(5)]
-project(forward0)
-project(backward0)
+project_forward(forward0)
+project_backward(backward0)
 cost0 = fun([forward0, backward0])
 sys.stdout.write(f"reference cost {cost0:.16e}\n")
 
-genes_forward = [rand() for i in range(g.lmb + 1)]
-genes_backward = [rand() for i in range(g.lmb + 1)]
+genes_forward = [rand(project_forward) for i in range(g.lmb + 1)]
+genes_backward = [rand(project_backward) for i in range(g.lmb + 1)]
 n_mutations = 50 * g.n * (1 + g.a + g.p) // 100
 generation = 0
 max_generation = 10000000000
@@ -188,12 +199,11 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        sys.stdout.write(
-            f"{generation:08} {len(Hash):10} {g.hits:10} {costs[i]:.16e}\n")
+        sys.stdout.write(f"{generation:08} {costs[i]:.16e}\n")
         print(wavegp.as_string(g, genes_forward[i]))
         print(wavegp.as_string(g, genes_backward[i]))
     if generation == max_generation:
         break
     generation += 1
-    mutate(i, genes_forward)
-    mutate(i, genes_backward)
+    mutate(i, genes_forward, project_forward)
+    mutate(i, genes_backward, project_backward)

@@ -168,7 +168,7 @@ genes_forward = [rand() for i in range(g.lmb + 1)]
 genes_backward = [rand() for i in range(g.lmb + 1)]
 n_mutations = 50 * g.n * (1 + g.a + g.p) // 100
 generation = 0
-max_generation = 100000
+max_generation = 10000000000
 while True:
     with multiprocessing.Pool() as pool:
         costs = pool.map(fun, zip(genes_forward, genes_backward))

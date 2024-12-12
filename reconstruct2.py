@@ -149,7 +149,7 @@ g.n = 6
 g.o = 1
 g.a = 2
 g.p = 0
-g.lmb = 10
+g.lmb = 100
 forward0 = wavegp.build(
     g,
     #  0      1       2        3    4    5        6     7
@@ -180,7 +180,7 @@ while True:
         costs = pool.map(fun, zip(genes_forward, genes_backward))
     i = np.argmin(costs)
     if generation % 100 == 0:
-        sys.stdout.write(f"{generation:08} {costs[i]:.16e} {len(Hash)}\n")
+        sys.stdout.write(f"{generation:08} {costs[i]:.16e} {len(Hash):08}\n")
     if generation == max_generation:
         break
     generation += 1

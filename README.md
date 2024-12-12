@@ -111,3 +111,10 @@ loss: 0
 - Miller, J. F. (2020). Cartesian genetic programming: its status and
   future. Genetic Programming and Evolvable Machines, 21(1), 129-168
   [10.1007/s10710-019-09360-6](https://doi.org/10.1007/s10710-019-09360-6)
+
+# Search algorithm
+
+Standard CGP uses a search algorithm that is inspired by the 1 +
+$\lambda$ evolutionary strategy
+
+<p align="center"><img src="img/search.png"/></p>

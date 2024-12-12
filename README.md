@@ -121,6 +121,10 @@ loss: 0
   future. Genetic Programming and Evolvable Machines, 21(1), 129-168
   [10.1007/s10710-019-09360-6](https://doi.org/10.1007/s10710-019-09360-6)
 
+# Structure
+
+<p align="center"><img src="img/cartesian.png"/></p>
+
 # Search algorithm
 
 Standard CGP uses a search algorithm that is inspired by the 1 +

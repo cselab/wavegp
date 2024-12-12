@@ -52,15 +52,7 @@ def project0(gen):
 
 def project_forward(gen):
     gen[:] = forward0[:]
-
-    j = gen[g.i + g.n + 0, 1]
-    gen[j, 0] = Names["Merge"]
-
-    gen[gen[j, 1 + 0], 0] = Names["Plus"]
-    gen[gen[j, 1 + 1], 0] = Names["Minus"]
-
-    project0(gen)
-
+    return
 
 def project_backward(gen):
     j = gen[g.i + g.n + 0, 1]

@@ -68,8 +68,6 @@ def Merge(inp, args):
 random.seed(2)
 N = 8
 x0 = 56, 40, 8, 24, 48, 48, 40, 16
-y0 = 48, -16, 16, 16, 48, 0, 28, -24
-
 g.nodes = Even, Odd, Plus, Minus, P, U, Merge
 g.names = "Even", "Odd", "Plus", "Minus", "P", "U", "Merge"
 g.arity = 1, 1, 2, 2, 1, 1, 2
@@ -98,6 +96,5 @@ gen_backward = wavegp.build(
 
 y, = wavegp.execute(g, gen_forward, [x0])
 x, = wavegp.execute(g, gen_backward, [y])
-
 sys.stdout.write("cost1: %g\n" % diff(x, x0))
 wavegp.as_image(g, gen_forward, "a.svg")

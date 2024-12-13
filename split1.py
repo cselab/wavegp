@@ -48,8 +48,6 @@ dtype = float
 random.seed(2)
 N = 8
 x0 = 56, 40, 8, 24, 48, 48, 40, 16
-y0 = 48, -16, 16, 16, 48, 0, 28, -24
-
 g.nodes = Plus, Minus, U
 g.names = "Plus", "Minus", "U"
 g.arity = 2, 2, 1
@@ -60,19 +58,30 @@ g.n = 3
 g.o = 2
 g.a = 2
 g.p = 0
-gen0 = wavegp.rand(g)
-gen1 = wavegp.rand(g)
-gen2 = wavegp.build(
+gen_forward = wavegp.build(
     g,
     #  0     1    2        3    4       5     6
     ["i0", "i1", "Minus", "U", "Plus", "o0", "o1"],
     [(1, 2), (0, 2), (2, 3), (0, 4), (3, 4), (4, 5), (2, 6)],
     [])
-wavegp.as_image(g, gen2, "split.png")
 
-for gen in gen0, gen1, gen2:
-    sys.stdout.write(wavegp.as_string(g, gen))
-    y = execute(gen, x0)
-    sys.stdout.write("cost: %g\n\n" % diff(y, y0))
-    with open("split.gv", "w") as f:
-        f.write(wavegp.as_graphviz(g, gen))
+gen_backward = wavegp.build(
+    g,
+    #  0     1    2        3    4       5     6
+    ["i0", "i1", "U", "Minus", "Plus", "o0", "o1"],
+    [
+        (1, 2),  # U
+        (0, 3),  # Minus
+        (2, 3),
+        (1, 4),  # Plus
+        (3, 4),
+        (3, 5),  # o0
+        (4, 6),  # o1
+    ],
+    [])
+
+y = execute(gen_forward, x0)
+x = execute(gen_backward, y)
+sys.stdout.write("cost1: %g\n" % diff(x, x0))
+wavegp.as_image(g, gen_forward, "split1.0.png")
+wavegp.as_image(g, gen_backward, "split1.1.png")

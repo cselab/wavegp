@@ -4,10 +4,12 @@ import numpy as np
 import random
 import subprocess
 import statistics
+import pathlib
 
 
 class g:
     pass
+
 
 def seen(a, b):
     a = a.tobytes()
@@ -16,6 +18,7 @@ def seen(a, b):
     if not ans:
         Hash.add((a, b))
     return ans
+
 
 def fun(forward, backward):
     cost = []
@@ -29,6 +32,7 @@ def fun(forward, backward):
         cost.append(l)
     ans = statistics.mean(cost)
     return ans
+
 
 def execute(gen, x):
     xe = x[0::2]
@@ -44,6 +48,7 @@ def diff(a, b):
     diff = np.subtract(a, b, dtype=dtype)
     return np.mean(diff**2)
 
+
 def example():
     p = 2
     q = 10
@@ -52,6 +57,7 @@ def example():
         x.append(x[-1] + random.randint(-p, p))
         p, q = q, p
     return np.array(x, dtype=dtype)
+
 
 def Plus(inp, args):
     x, y = inp
@@ -72,6 +78,7 @@ def U(inp, args):
     x, = inp
     return np.divide(x, 2, dtype=dtype)
 
+
 Hash = set()
 dtype = float
 random.seed(123456)
@@ -91,13 +98,15 @@ forward0 = wavegp.build(
     g,
     #  0     1    2        3    4       5     6
     ["i0", "i1", "Minus", "U", "Plus", "o0", "o1"],
-    [(1, 2), # Minus
-     (0, 2),
-     (2, 3), # U
-     (0, 4), # Plus
-     (3, 4), 
-     (4, 5), # o0
-     (2, 6)],# o1
+    [
+        (1, 2),  # Minus
+        (0, 2),
+        (2, 3),  # U
+        (0, 4),  # Plus
+        (3, 4),
+        (4, 5),  # o0
+        (2, 6)
+    ],  # o1
     [])
 
 backward0 = wavegp.build(
@@ -119,6 +128,7 @@ xx = [example() for i in range(10)]
 cost0 = fun(forward0, backward0)
 best = sys.float_info.max, None, None
 generation = 0
+max_generation = 120000
 while True:
     while True:
         forward = wavegp.rand(g)
@@ -127,12 +137,16 @@ while True:
             break
     cost = fun(forward, backward)
     if cost < best[0]:
-        wavegp.as_image(g, forward, "best.forward.png")
-        wavegp.as_image(g, backward, "best.backward.png")
+        pathlib.Path("split2.forward.gv").write_text(wavegp.as_graphviz(g, forward))
+        pathlib.Path("split2.backward.gv").write_text(wavegp.as_graphviz(g, backward))
         sys.stdout.write("forward\n" + wavegp.as_string(g, forward, All=True))
-        sys.stdout.write("backward\n" + wavegp.as_string(g, backward, All=True))
+        sys.stdout.write("backward\n" +
+                         wavegp.as_string(g, backward, All=True))
         sys.stdout.write("\n")
         best = cost, forward, backward
     generation += 1
-    if generation % 10000 == 1:
-        sys.stdout.write(f"{generation:09} {len(Hash):09} {best[0]:.16e} {cost0:.16e}\n")
+    if generation % 10000 == 1 or generation == max_generation:
+        sys.stdout.write(
+            f"{generation:09} {len(Hash):09} {best[0]:.16e} {cost0:.16e}\n")
+    if generation == max_generation:
+        break

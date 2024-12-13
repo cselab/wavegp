@@ -29,13 +29,19 @@ $ python graphviz.py a.raw a.gv
 graphviz.py: a.gv
 ```
 
-Convert to images
+Convert to SVG image
 ```
 $ gvpack -u a.gv | dot -Tsvg -o img/a.svg
 ```
 
 <p align="center"><img src="img/a.svg"></p>
 
+Convert to PNG image
+```
+$ python png.py a.raw a
+png.py: a.0.png
+png.py: a.1.png
+```
 
 ```
 $ python execute.py

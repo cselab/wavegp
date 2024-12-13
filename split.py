@@ -13,20 +13,20 @@ def execute(gen, x):
     xe = x[0::2]  # fir
     xo = x[1::2]
     ye, yo = wavegp.execute(g, gen, [xe, xo])
-    y = np.empty(N, dtype=float)
+    y = np.empty(N, dtype=dtype)
     y[0::2] = ye
     y[1::2] = yo
     return y
 
 
 def diff(a, b):
-    diff = np.subtract(a, b, dtype=float)
+    diff = np.subtract(a, b, dtype=dtype)
     return np.mean(diff**2)
 
 
 def Plus(inp, args):
     x, y = inp
-    return np.add(x, y, dtype=float)
+    return np.add(x, y, dtype=dtype)
 
 
 def Minus(inp, args):
@@ -41,18 +41,18 @@ def P(inp, args):
 
 def U(inp, args):
     x, = inp
-    return x / 2
+    return np.divide(x, 2, dtype=dtype)
 
-
+dtype = float
 random.seed(2)
 N = 8
 x0 = 56, 40, 8, 24, 48, 48, 40, 16
 y0 = 48, -16, 16, 16, 48, 0, 28, -24
 
-g.nodes = Plus, Minus, P, U
-g.names = "Plus", "Minus", "P", "U"
-g.arity = 2, 2, 1, 1
-g.args = 0, 0, 0, 0
+g.nodes = Plus, Minus, U
+g.names = "Plus", "Minus", "U"
+g.arity = 2, 2, 1
+g.args = 0, 0, 0
 # input, maximum node, output, arity, parameters
 g.i = 2
 g.n = 3

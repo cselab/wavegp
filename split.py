@@ -55,7 +55,7 @@ g.arity = 2, 2, 1, 1
 g.args = 0, 0, 0, 0
 # input, maximum node, output, arity, parameters
 g.i = 2
-g.n = 6
+g.n = 3
 g.o = 2
 g.a = 2
 g.p = 0
@@ -69,7 +69,7 @@ gen2 = wavegp.build(
     [])
 wavegp.as_image(g, gen2, "split.png")
 
-for gen in [gen2]:
+for gen in gen0, gen1, gen2:
     sys.stdout.write(wavegp.as_string(g, gen))
     y = execute(gen, x0)
     sys.stdout.write("cost: %g\n\n" % diff(y, y0))

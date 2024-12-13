@@ -9,32 +9,29 @@ class g:
     pass
 
 
-def execute(gen, x0):
-    xe = x0
-    xo = x0
+def execute(gen, x):
+    xe = x[0::2]  # fir
+    xo = x[1::2]
     ye, yo = wavegp.execute(g, gen, [xe, xo])
-    return ye
+    y = np.empty(N, dtype=float)
+    y[0::2] = ye
+    y[1::2] = yo
+    return y
 
 
 def diff(a, b):
-    diff = np.subtract(a, b)
+    diff = np.subtract(a, b, dtype=float)
     return np.mean(diff**2)
 
 
 def Plus(inp, args):
     x, y = inp
-    z = np.zeros(N)
-    for i in range(N):
-        z[i] = x[i] + y[i]
-    return z
+    return np.add(x, y, dtype=float)
 
 
 def Minus(inp, args):
     x, y = inp
-    z = np.zeros(N)
-    for i in range(N):
-        z[i] = x[i] - y[i]
-    return z
+    return np.subtract(x, y)
 
 
 def P(inp, args):
@@ -66,12 +63,13 @@ gen0 = wavegp.rand(g)
 gen1 = wavegp.rand(g)
 gen2 = wavegp.build(
     g,
-    #        0    1        2    3       4     5     6
+    #  0     1    2        3    4       5     6
     ["i0", "i1", "Minus", "U", "Plus", "o0", "o1"],
-    [(0, 2), (1, 2), (2, 3), (0, 4), (3, 4), (4, 5), (2, 6)],
+    [(1, 2), (0, 2), (2, 3), (0, 4), (3, 4), (4, 5), (2, 6)],
     [])
+wavegp.as_image(g, gen2, "split.png")
 
-for gen in gen0, gen1, gen2:
+for gen in [gen2]:
     sys.stdout.write(wavegp.as_string(g, gen))
     y = execute(gen, x0)
     sys.stdout.write("cost: %g\n\n" % diff(y, y0))

@@ -67,7 +67,6 @@ def Merge(inp, args):
 
 random.seed(2)
 N = 8
-Y, X = np.meshgrid(range(N), range(N))
 x0 = 56, 40, 8, 24, 48, 48, 40, 16
 y0 = 48, -16, 16, 16, 48, 0, 28, -24
 
